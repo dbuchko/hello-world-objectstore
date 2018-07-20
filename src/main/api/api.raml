@@ -1,0 +1,28 @@
+#%RAML 1.0
+title: Sample API
+version: v1.0
+baseUri: http://localhost
+
+/helloworld:
+  get:
+    headers:
+      key:
+        type: string
+        required: true
+    responses:
+      200:
+        body:
+          application/json:
+  put:
+    headers:
+      key:
+        type: string
+        required: true
+    body:
+      application/json:
+        type: !include resourceTypes/helloworld.put.raml
+        example: !include resourceTypes/helloworld.put.example.raml    
+    responses:
+      200:
+        body:
+          application/json:

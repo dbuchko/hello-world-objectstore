@@ -1,0 +1,13 @@
+---
+applications:
+- name: hello-world-objectstore
+  memory: 1G
+  instances: 1
+  path: target/hello-world-objectstore-1.0.0-SNAPSHOT.zip
+  buildpack: mule_buildpack
+  services:
+    - muleobjstore
+    - helloworld-java-metering
+  env:
+    APP_PORT: 8080
+    

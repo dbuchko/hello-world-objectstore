@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:objectstore="http://www.mulesoft.org/schema/mule/objectstore" xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:dw="http://www.mulesoft.org/schema/mule/ee/dw" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/ee/dw http://www.mulesoft.org/schema/mule/ee/dw/current/dw.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/objectstore http://www.mulesoft.org/schema/mule/objectstore/current/mule-objectstore.xsd">
+    <objectstore:config name="ObjectStore" objectStore-ref="_defaultUserObjectStore" doc:name="ObjectStore" persistent="true"/>
+    <flow name="put:/helloworld:api-config-impl">
+        <set-variable variableName="key" value="#[message.inboundProperties['key']]" doc:name="key"/>
+        <json:json-to-object-transformer returnClass="ca.eqbank.hello.User" doc:name="JSON to Object"/>
+        <objectstore:store config-ref="ObjectStore" key="#[flowVars.key]" value-ref="#[payload]" overwrite="true" doc:name="ObjectStore"/>
+        <custom-transformer class="ca.eqbank.hello.Transformexample" doc:name="Java"/>
+        <set-payload value="#[message.payloadAs(java.lang.String)]" doc:name="Set Payload"/>
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+{
+	message: payload
+}]]></dw:set-payload>
+        </dw:transform-message>
+
+    </flow>
+    <flow name="get:/helloworld:api-config-impl">
+        <set-variable variableName="key" value="#[message.inboundProperties['key']]" doc:name="key"/>
+        <objectstore:contains config-ref="ObjectStore" key="#[flowVars.key]"  doc:name="ObjectStore"/>
+        <dw:transform-message doc:name="Transform Message">
+            <dw:set-payload><![CDATA[%dw 1.0
+%output application/java
+---
+{
+	containsKey: payload
+}]]></dw:set-payload>
+        </dw:transform-message>
+    </flow>
+</mule>
