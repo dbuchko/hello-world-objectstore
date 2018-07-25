@@ -8,6 +8,11 @@ applications:
   services:
     - muleobjstore
     - helloworld-java-metering
+    - redis-objectstore
   env:
-    APP_PORT: 8080
+    REDIS_HOST: 10.150.4.21
+    REDIS_PORT: 35367
+    REDIS_PWD: e9775612-c25e-4ab2-bafd-09621a7eca2a
+    
+    
     

@@ -3,4 +3,5 @@
     <name>hello-world-objectstore</name>
     <description></description>
     <muleExtension name="ObjectStore" qualifier="org.mule.tooling.ui.contribution.objectstore"/>
+    <muleExtension name="Redis" qualifier="org.mule.tooling.ui.contribution.redis.3.6.0"/>
 </mule-project>
